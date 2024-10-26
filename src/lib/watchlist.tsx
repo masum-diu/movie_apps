@@ -1,16 +1,25 @@
-// src/lib/watchlist.ts
-let watchlist: string[] = []; // Mock in-memory storage
+const WATCHLIST_KEY = "watchlist";
 
-export const addToWatchlist = async (movieId: string) => {
+export const getWatchlist = (): string[] => {
+  const watchlist = localStorage.getItem(WATCHLIST_KEY);
+  return watchlist ? JSON.parse(watchlist) : [];
+};
+
+export const isMovieInWatchlist = (movieId: string): boolean => {
+  const watchlist = getWatchlist();
+  return watchlist.includes(movieId);
+};
+
+export const addToWatchlist = (movieId: string): void => {
+  const watchlist = getWatchlist();
   if (!watchlist.includes(movieId)) {
-    watchlist.push(movieId);
+    localStorage.setItem(
+      WATCHLIST_KEY,
+      JSON.stringify([...watchlist, movieId])
+    );
   }
 };
 
-export const removeFromWatchlist = async (movieId: string) => {
-  watchlist = watchlist.filter((id) => id !== movieId);
-};
-
-export const getWatchlist = async () => {
-  return watchlist;
+export const removeFromWatchlist = (movieId: string): void => {
+  localStorage.removeItem(WATCHLIST_KEY);
 };

@@ -6,39 +6,37 @@ import Image from "next/image";
 import { fetchMovieDetails } from "@/lib/api"; // Make sure this path points to the movie fetch function
 
 interface Movie {
-  id: string;
+  id: string; // Ensure this is a string to match your watchlist IDs
   poster_path: string;
   title: string;
 }
 
 const WatchlistPage = () => {
-  const [watchlist, setWatchlist] = useState<string[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const fetchWatchlist = async () => {
-      const list = await getWatchlist();
-      setWatchlist(list);
-
-      const movieDetails = await Promise.all(
+    // Function to fetch watchlist from local storage and movie details
+    const fetchWatchlist = () => {
+      const list = getWatchlist(); // Get watchlist from local storage
+      const movieDetails = Promise.all(
         list.map(async (movieId) => {
           const movie = await fetchMovieDetails(movieId);
           return {
-            id: movie.id,
+            id: movie.id.toString(), // Ensure ID is a string
             poster_path: movie.poster_path,
             title: movie.title,
           };
         })
       );
-      setMovies(movieDetails);
+      movieDetails.then(setMovies); // Set the movies state after fetching details
     };
 
-    fetchWatchlist();
+    fetchWatchlist(); // Fetch watchlist on component mount
   }, []);
 
   const handleRemove = async (movieId: string) => {
-    await removeFromWatchlist(movieId);
-    setMovies((prev) => prev.filter((movie) => movie.id !== movieId));
+    removeFromWatchlist(movieId); // Remove from watchlist
+    setMovies((prev) => prev.filter((movie) => movie.id !== movieId)); // Update state to remove the movie immediately
   };
 
   return (
@@ -60,7 +58,7 @@ const WatchlistPage = () => {
               </Link>
               <button
                 onClick={() => handleRemove(movie.id)}
-                className=" text-red-500 py-2 text-center w-full "
+                className="text-red-500 py-2 text-center w-full"
               >
                 Remove from Watchlist
               </button>
