@@ -8,7 +8,7 @@ import {
   addToWatchlist,
   removeFromWatchlist,
   isMovieInWatchlist,
-} from "@/lib/watchlist"; // Import your watchlist functions
+} from "@/lib/watchlist";
 
 interface MovieDetailsProps {
   movie: Movie;
@@ -25,9 +25,9 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   useEffect(() => {
-    // Check if the movie is already in the watchlist when the component mounts
     const checkWatchlist = async () => {
-      const exists = await isMovieInWatchlist(movie.id);
+      const exists = await isMovieInWatchlist(movie.id.toString());
+
       setIsInWatchlist(exists);
     };
 
@@ -37,10 +37,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const handleToggleWatchlist = async () => {
     startTransition(async () => {
       if (!isInWatchlist) {
-        await addToWatchlist(movie.id);
+        await addToWatchlist(movie.id.toString());
         setIsInWatchlist(true);
       } else {
-        await removeFromWatchlist(movie.id);
+        await removeFromWatchlist(movie.id.toString());
         setIsInWatchlist(false);
       }
     });
