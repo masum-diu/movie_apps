@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react"; // Import Suspense
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import MovieList from "@/components/MovieList";
 
@@ -15,7 +15,6 @@ const Search = () => {
           <h1 className="text-2xl font-semibold py-4">
             Search Results for: {query}
           </h1>
-          {/* Wrap MovieList in Suspense to handle loading state */}
           <Suspense fallback={<p>Loading results...</p>}>
             <MovieList query={query} />
           </Suspense>
