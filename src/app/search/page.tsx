@@ -1,4 +1,8 @@
+// /app/search/page.js
+
 "use client";
+export const dynamic = "force-dynamic";
+
 import { useSearchParams } from "next/navigation";
 import MovieList from "@/components/MovieList";
 import { Suspense } from "react";
@@ -8,20 +12,22 @@ const Search = () => {
   const query = searchParams.get("query");
 
   return (
-    <div>
-      <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<p>Loading search results...</p>}>
+      <div>
         {query ? (
           <>
             <h1 className="text-2xl font-semibold py-4">
               Search Results for: {query}
             </h1>
-            <MovieList query={query} />
+            <Suspense fallback={<p>Loading movies...</p>}>
+              <MovieList query={query} />
+            </Suspense>
           </>
         ) : (
           <p className="text-lg">Please enter a search query.</p>
         )}
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   );
 };
 
